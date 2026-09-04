@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="A private cinematic content partnership proposal from Geri Baboçi / @legefilms for New York City Hotel, September 13–16, 2026." />
+  <meta name="theme-color" content="#05080d" />
+  <title>New York City Hotel × Legefilms</title>
+
+  <!--
+    MILLENNIUM HILTON NEW YORK ONE UN PLAZA × LEGEFILMS
+    ---------------------------------------------------
+    Quick setup:
+    1. Replace assets/profile.jpg with Geri's portrait.
+    2. Add assets/hero.mp4 for the full-screen opening video.
+    3. Replace logo01.png–logo05.png with past hotel logos.
+    4. Replace photo.jpg, photo1.jpg–photo19.jpg with hotel portfolio images.
+    5. The two Instagram references are already linked in SITE_CONFIG.reels.
+    6. Upload the entire folder to GitHub / Cloudflare Pages / Netlify.
+  -->
+
+  <style>
+    :root {
+      --bg: #030508;
+      --bg-soft: #080d14;
+      --surface: rgba(255, 255, 255, 0.055);
+      --surface-strong: rgba(255, 255, 255, 0.085);
+      --white: #f6f8fb;
+      --muted: rgba(246, 248, 251, 0.66);
+      --muted-2: rgba(246, 248, 251, 0.42);
+      --line: rgba(255, 255, 255, 0.12);
+      --hilton-blue: #2767b2;
+      --hilton-blue-light: #72aeea;
+      --hilton-blue-deep: #0b2b50;
+      --max: 1220px;
+      --radius: 28px;
+      --radius-lg: 44px;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; background: var(--bg); }
+    body {
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: var(--white);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+      background:
+        radial-gradient(circle at 50% -8%, rgba(39, 103, 178, 0.32), transparent 33rem),
+        radial-gradient(circle at 92% 28%, rgba(114, 174, 234, 0.13), transparent 29rem),
+        linear-gradient(180deg, #05080d 0%, #020407 48%, #000 100%);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 120;
+      pointer-events: none;
+      opacity: 0.12;
+      mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.78' numOctaves='3' stitchTiles='stitchTiles'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.34'/%3E%3C/svg%3E");
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 119;
+      pointer-events: none;
+      background: radial-gradient(620px circle at var(--mouse-x, 50%) var(--mouse-y, 20%), rgba(93, 157, 225, 0.14), transparent 46%);
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img, video { display: block; width: 100%; }
+    button { color: inherit; font: inherit; }
+
+    .loader {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      display: grid;
+      place-items: center;
+      background: #020407;
+      transition: opacity 850ms var(--ease), visibility 850ms var(--ease);
+    }
+    .loader.is-hidden { opacity: 0; visibility: hidden; }
+    .loader-mark {
+      font-size: 0.72rem;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.72);
+    }
+    .loader-mark::after {
+      content: "";
+      display: block;
+      width: 100%;
+      height: 1px;
+      margin-top: 18px;
+      background: linear-gradient(90deg, transparent, var(--hilton-blue-light), transparent);
+      animation: loading 1.55s var(--ease) infinite;
+    }
+    @keyframes loading { 0%,100% { transform: scaleX(0); opacity: 0; } 48% { transform: scaleX(1); opacity: 1; } }
+
+    .nav {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      z-index: 90;
+      width: min(calc(100% - 32px), 960px);
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 10px 11px 10px 18px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(4, 8, 13, 0.48);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      box-shadow: 0 18px 70px rgba(0,0,0,.26);
+      transition: background 280ms ease, border-color 280ms ease;
+    }
+    .nav.is-scrolled { background: rgba(4, 8, 13, 0.82); border-color: rgba(255,255,255,.16); }
+    .nav-brand {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: .73rem;
+      font-weight: 750;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.88);
+    }
+    .nav-brand span { color: var(--hilton-blue-light); }
+    .nav-links { display: flex; gap: 3px; font-size: .77rem; color: var(--muted); }
+    .nav-links a { padding: 8px 10px; border-radius: 999px; transition: 220ms ease; }
+    .nav-links a:hover { color: var(--white); background: rgba(255,255,255,.07); }
+    .nav-cta {
+      flex: 0 0 auto;
+      padding: 9px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.94);
+      color: #04080d;
+      font-size: .77rem;
+      font-weight: 800;
+      transition: transform 240ms var(--ease), background 240ms ease;
+    }
+    .nav-cta:hover { transform: translateY(-1px); background: #fff; }
+
+    .section { position: relative; z-index: 2; padding: 100px 24px; }
+    .section-tight { position: relative; z-index: 2; padding: 68px 24px; }
+    .wrap { width: min(100%, var(--max)); margin: 0 auto; }
+
+    .hero {
+      position: relative;
+      min-height: 88svh;
+      display: grid;
+      align-items: end;
+      overflow: hidden;
+      padding: 145px 24px 58px;
+      background: #04070b;
+    }
+    .hero-media, .hero-fallback, .hero-overlay { position: absolute; inset: 0; }
+    .hero-media { height: 100%; object-fit: cover; opacity: .78; }
+    .hero-fallback { background: linear-gradient(135deg, #07111d 0%, #020407 58%, #0b2b50 100%); }
+    .hero-overlay {
+      background:
+        linear-gradient(180deg, rgba(1,4,8,.18) 0%, rgba(1,4,8,.36) 42%, rgba(1,4,8,.95) 100%),
+        radial-gradient(circle at 72% 25%, rgba(39,103,178,.3), transparent 38rem);
+    }
+    .hero-grid {
+      position: relative;
+      z-index: 3;
+      width: min(100%, var(--max));
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(290px, .55fr);
+      align-items: end;
+      gap: 58px;
+    }
+    .pill, .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      width: fit-content;
+      font-size: .72rem;
+      font-weight: 720;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.7);
+    }
+    .pill {
+      padding: 9px 13px;
+      border: 1px solid rgba(255,255,255,.13);
+      border-radius: 999px;
+      background: rgba(255,255,255,.055);
+      backdrop-filter: blur(16px);
+    }
+    .pill-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--hilton-blue-light); box-shadow: 0 0 18px var(--hilton-blue-light); }
+    h1 {
+      margin-top: 24px;
+      max-width: 980px;
+      font-size: clamp(4rem, 9.2vw, 9.5rem);
+      line-height: .88;
+      letter-spacing: -.075em;
+      font-weight: 780;
+      text-wrap: balance;
+    }
+    h1 span { display: block; color: transparent; -webkit-text-stroke: 1.4px rgba(255,255,255,.48); }
+    .hero-copy {
+      max-width: 770px;
+      margin-top: 28px;
+      color: rgba(255,255,255,.7);
+      font-size: clamp(1.08rem, 1.7vw, 1.48rem);
+      line-height: 1.5;
+      letter-spacing: -.025em;
+      text-wrap: balance;
+    }
+    .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 34px; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 49px;
+      padding: 0 21px;
+      border-radius: 999px;
+      font-size: .89rem;
+      font-weight: 780;
+      transition: transform 250ms var(--ease), border-color 250ms ease, background 250ms ease;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary { background: var(--white); color: #04070b; }
+    .btn-secondary { border: 1px solid var(--line); background: rgba(255,255,255,.055); color: rgba(255,255,255,.85); backdrop-filter: blur(18px); }
+    .date-card {
+      padding: 28px;
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: var(--radius);
+      background: rgba(3,8,14,.5);
+      backdrop-filter: blur(26px);
+      box-shadow: inset 0 1px rgba(255,255,255,.04);
+    }
+    .date-label { font-size: .69rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted-2); }
+    .date-value { margin-top: 10px; font-size: 2.25rem; line-height: 1; letter-spacing: -.05em; font-weight: 750; }
+    .date-year { margin-top: 8px; color: var(--hilton-blue-light); font-size: .88rem; font-weight: 700; }
+    .date-rule { height: 1px; margin: 25px 0; background: var(--line); }
+    .date-note { color: var(--muted); font-size: .9rem; line-height: 1.55; }
+
+    .section-heading { max-width: 920px; }
+    .kicker { margin-bottom: 17px; color: var(--hilton-blue-light); font-size: .74rem; font-weight: 760; letter-spacing: .14em; text-transform: uppercase; }
+    h2 { font-size: clamp(2.9rem, 6vw, 6.5rem); line-height: .95; letter-spacing: -.065em; font-weight: 740; text-wrap: balance; }
+    .section-copy { max-width: 790px; margin-top: 24px; color: var(--muted); font-size: clamp(1.03rem, 1.6vw, 1.35rem); line-height: 1.55; letter-spacing: -.02em; }
+
+    .creator-grid { display: grid; grid-template-columns: .76fr 1.24fr; gap: 26px; margin-top: 52px; }
+    .portrait-card, .glass-card, .stat, .deliverable, .reel-card, .proposal-card {
+      border: 1px solid var(--line);
+      background: var(--surface);
+      box-shadow: inset 0 1px rgba(255,255,255,.035);
+    }
+    .portrait-card { position: relative; min-height: 590px; overflow: hidden; border-radius: var(--radius-lg); }
+    .portrait-card img { position: absolute; inset: 0; height: 100%; object-fit: cover; }
+    .portrait-card::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 45%, rgba(1,4,8,.95)); }
+    .portrait-caption { position: absolute; z-index: 2; left: 30px; right: 30px; bottom: 28px; }
+    .portrait-caption strong { display: block; font-size: 1.35rem; letter-spacing: -.03em; }
+    .portrait-caption span { display: block; margin-top: 6px; color: var(--muted); font-size: .88rem; }
+    .creator-copy { display: grid; gap: 20px; }
+    .glass-card { border-radius: var(--radius-lg); padding: clamp(32px, 5vw, 66px); }
+    .creator-copy p { color: var(--muted); font-size: clamp(1.18rem, 2vw, 1.62rem); line-height: 1.5; letter-spacing: -.025em; }
+    .creator-copy p + p { margin-top: 20px; }
+    .skill-row { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 30px; }
+    .skill { padding: 9px 13px; border: 1px solid var(--line); border-radius: 999px; color: rgba(255,255,255,.72); font-size: .78rem; }
+
+    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 42px; }
+    .stat { min-height: 220px; display: flex; flex-direction: column; justify-content: space-between; padding: 28px; border-radius: var(--radius); }
+    .stat-value { font-size: clamp(3.2rem, 6vw, 6rem); line-height: .9; letter-spacing: -.075em; font-weight: 760; }
+    .stat-label { max-width: 210px; color: var(--muted); font-size: .9rem; line-height: 1.4; }
+
+
+    .reels-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 38px; }
+    .reel-card { min-width: 0; overflow: hidden; border-radius: var(--radius); }
+    .reel-preview { position: relative; aspect-ratio: 9 / 12; overflow: hidden; background: linear-gradient(145deg, #0c2036, #05080d 60%); }
+    .reel-preview img { height: 100%; object-fit: cover; transition: transform 700ms var(--ease); }
+    .reel-card:hover img { transform: scale(1.035); }
+    .reel-preview::after { content: "▶"; position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); display: grid; place-items: center; width: 58px; height: 58px; padding-left: 3px; border: 1px solid rgba(255,255,255,.28); border-radius: 50%; background: rgba(3,7,12,.5); backdrop-filter: blur(18px); }
+    .reel-meta { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 20px; }
+    .reel-meta strong { font-size: .9rem; }
+    .reel-meta span { color: var(--muted-2); font-size: .77rem; }
+
+    .logos { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-top: 28px; }
+    .logo-tile { min-height: 130px; display: grid; place-items: center; padding: 28px; border: 1px solid var(--line); border-radius: 22px; background: rgba(255,255,255,.94); }
+    .logo-tile img { max-width: 150px; max-height: 64px; object-fit: contain; opacity: .98; }
+
+    .gallery { columns: 4 240px; column-gap: 12px; margin-top: 38px; }
+    .photo { position: relative; margin: 0 0 12px; overflow: hidden; break-inside: avoid; border-radius: 20px; background: var(--surface); cursor: zoom-in; }
+    .photo img { width: 100%; height: auto; transition: transform 700ms var(--ease), opacity 400ms ease; }
+    .photo:hover img { transform: scale(1.025); }
+    .photo::after { content: ""; position: absolute; inset: 0; pointer-events: none; border: 1px solid rgba(255,255,255,.09); border-radius: inherit; }
+
+
+
+    .proposal-card {
+      position: relative;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 50px;
+      padding: clamp(34px, 6vw, 78px);
+      border-radius: var(--radius-lg);
+      background:
+        radial-gradient(circle at 85% 15%, rgba(82,151,222,.25), transparent 30rem),
+        linear-gradient(145deg, rgba(16,36,59,.92), rgba(3,6,10,.96) 70%);
+    }
+    .proposal-card h2 { font-size: clamp(3rem, 5.6vw, 6.2rem); }
+    .proposal-card .section-copy { max-width: 700px; }
+    .exchange { display: grid; gap: 12px; align-content: center; }
+    .exchange-item { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 18px 0; border-bottom: 1px solid var(--line); }
+    .exchange-item:first-child { border-top: 1px solid var(--line); }
+    .exchange-item span { color: var(--muted); font-size: .86rem; }
+    .exchange-item strong { text-align: right; font-size: 1rem; }
+    .proposal-note { margin-top: 26px; color: var(--muted-2); font-size: .77rem; line-height: 1.5; }
+
+    footer { position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 28px 34px; border-top: 1px solid var(--line); color: var(--muted-2); font-size: .77rem; }
+    footer a:hover { color: var(--white); }
+
+    .reveal { opacity: 0; transform: translateY(34px); transition: opacity 900ms var(--ease), transform 900ms var(--ease); }
+    .reveal.is-visible { opacity: 1; transform: translateY(0); }
+
+    .lightbox { position: fixed; inset: 0; z-index: 500; display: grid; place-items: center; padding: 30px; background: rgba(0,0,0,.92); opacity: 0; visibility: hidden; transition: 250ms ease; }
+    .lightbox.is-open { opacity: 1; visibility: visible; }
+    .lightbox img { max-width: min(94vw, 1500px); max-height: 88vh; width: auto; object-fit: contain; border-radius: 12px; }
+    .lightbox-close { position: absolute; top: 22px; right: 24px; width: 44px; height: 44px; border: 1px solid var(--line); border-radius: 50%; background: rgba(255,255,255,.08); cursor: pointer; }
+
+    @media (max-width: 980px) {
+      .nav-links { display: none; }
+      .hero-grid, .creator-grid, .proposal-card { grid-template-columns: 1fr; }
+      .date-card { max-width: 420px; }
+      .stats-grid { grid-template-columns: 1fr; }
+      .reels-grid { grid-template-columns: repeat(2, 1fr); }
+      .logos { grid-template-columns: repeat(3, 1fr); }
+      .portrait-card { min-height: 520px; }
+    }
+
+    @media (max-width: 640px) {
+      .section { padding: 78px 18px; }
+      .section-tight { padding: 56px 18px; }
+      .hero { padding: 132px 18px 40px; }
+      h1 { font-size: clamp(3.55rem, 18vw, 5.8rem); }
+      .nav { top: 12px; width: calc(100% - 20px); }
+      .nav-brand { font-size: .63rem; }
+      .nav-cta { font-size: .7rem; padding: 8px 11px; }
+      .hero-grid { gap: 34px; }
+      .date-value { font-size: 1.85rem; }
+      .reels-grid, .logos { grid-template-columns: 1fr; }
+      .logo-tile { min-height: 105px; }
+      .proposal-card { padding: 34px 24px; }
+      footer { flex-direction: column; text-align: center; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation: none !important; transition: none !important; }
+      .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="loader" aria-hidden="true"><div class="loader-mark">Private Proposal</div></div>
+
+  <nav class="nav" aria-label="Main navigation">
+    <a class="nav-brand" href="#top">NYC Hotel <span>×</span> Legefilms</a>
+    <div class="nav-links">
+      <a href="#creator">Creator</a>
+      <a href="#work">Work</a>
+      <a href="#portfolio">Portfolio</a>
+      <a href="#proposal">Proposal</a>
+    </div>
+    <a class="nav-cta" href="mailto:geri@legefilms.com?subject=NYC%20Hotel%20Collaboration">Connect</a>
+  </nav>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-fallback" aria-hidden="true"></div>
+      <video class="hero-media" autoplay muted loop playsinline preload="auto" aria-hidden="true">
+        <source src="assets/hero.mp4" type="video/mp4" />
+      </video>
+      <div class="hero-overlay" aria-hidden="true"></div>
+
+      <div class="hero-grid">
+        <div class="reveal">
+          <div class="pill"><span class="pill-dot"></span>Private Creator Partnership</div>
+          <h1>New York,<span>Above the Noise.</span></h1>
+          <p class="hero-copy">A cinematic content partnership for a New York City hotel, built around its unique character, design, guest experience, and unmistakable New York setting.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#proposal">View the Proposal</a>
+            <a class="btn btn-secondary" href="#work">See My Work</a>
+          </div>
+        </div>
+
+        <aside class="date-card reveal" aria-label="Proposed stay dates">
+          <div class="date-label">Proposed Stay</div>
+          <div class="date-value">September 13–16</div>
+          <div class="date-year">New York · 2026</div>
+          <div class="date-rule"></div>
+          <p class="date-note">Three nights in exchange for one Reel, five Stories, and 5–10 edited marketing photos.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="creator">
+      <div class="wrap">
+        <div class="section-heading reveal">
+          <div class="kicker">The Creator</div>
+          <h2>Cinematic hospitality content that makes a stay feel tangible.</h2>
+        </div>
+
+        <div class="creator-grid">
+          <figure class="portrait-card reveal">
+            <img src="assets/profile.jpg" alt="Geri Baboçi, filmmaker and photographer behind Legefilms" />
+            <figcaption class="portrait-caption"><strong>Geri Baboçi</strong><span>@legefilms · Filmmaker · Photographer</span></figcaption>
+          </figure>
+
+          <div class="creator-copy">
+            <article class="glass-card reveal">
+              <p>I create premium photo and video for hotels, travel brands, artists, and lifestyle partners. My work combines cinematic pacing, refined composition, natural movement, and details that create booking desire.</p>
+              <p>For your property, the story would move from Manhattan energy into the character, design, atmosphere, and guest experience that make the hotel worth staying in.</p>
+              <div class="skill-row">
+                <span class="skill">Luxury Hospitality</span><span class="skill">Cinematic Reels</span><span class="skill">Travel Storytelling</span><span class="skill">Photo + Video</span>
+              </div>
+            </article>
+
+            <div class="stats-grid">
+              <article class="stat reveal"><div class="stat-value">250M+</div><div class="stat-label">Total content views</div></article>
+              <article class="stat reveal"><div class="stat-value">100K+</div><div class="stat-label">Followers across platforms</div></article>
+              <article class="stat reveal"><div class="stat-value">13%</div><div class="stat-label">Audience engagement</div></article>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="work">
+      <div class="wrap">
+        <div class="section-heading reveal">
+          <div class="kicker">Selected Work</div>
+          <h2>Two references for the visual language.</h2>
+          <p class="section-copy">Examples of the pacing, atmosphere, and location-led storytelling I would bring to your property.</p>
+        </div>
+        <div class="reels-grid" id="reels-grid"></div>
+
+        <div class="section-heading reveal" style="margin-top:72px;">
+          <div class="kicker">Hospitality Experience</div>
+          <h2 style="font-size:clamp(2.35rem,4.6vw,4.8rem);">Selected hotel partners.</h2>
+        </div>
+        <div class="logos reveal">
+          <div class="logo-tile"><img src="assets/logo01.png" alt="Hotel partner logo" /></div>
+          <div class="logo-tile"><img src="assets/logo02.png" alt="Hotel partner logo" /></div>
+          <div class="logo-tile"><img src="assets/logo03.png" alt="Hotel partner logo" /></div>
+          <div class="logo-tile"><img src="assets/logo04.png" alt="Hotel partner logo" /></div>
+          <div class="logo-tile"><img src="assets/logo05.png" alt="Hotel partner logo" /></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="portfolio" aria-label="Hotel photography portfolio">
+      <div class="wrap">
+        <div class="section-heading reveal">
+          <div class="kicker">Hotel Photography</div>
+          <h2>Space, light, and experience.</h2>
+          <p class="section-copy">A selection of twenty hospitality images across interiors, details, dining, and destination moments.</p>
+        </div>
+        <div class="gallery" id="photo-gallery"></div>
+      </div>
+    </section>
+
+    <section class="section" id="proposal">
+      <div class="wrap">
+        <div class="proposal-card reveal">
+          <div>
+            <div class="kicker">The Partnership</div>
+            <h2>Three nights. One elevated New York story.</h2>
+            <p class="section-copy">In exchange for a three-night stay from September 13–16, 2026, I will create a concise campaign centered on the room, views, interiors, atmosphere, and guest experience. A high-floor room with a skyline or East River view would be preferred, subject to availability.</p>
+            <div class="hero-actions"><a class="btn btn-primary" href="mailto:geri@legefilms.com?subject=NYC%20Hotel%20Collaboration&body=Hi%20Geri%2C%0A%0AI%20reviewed%20your%20proposal%20for%20September%2013%E2%80%9316.%20">Start the Conversation</a></div>
+          </div>
+          <div class="exchange">
+            <div class="exchange-item"><span>Hotel provides</span><strong>3-night stay</strong></div>
+            <div class="exchange-item"><span>Proposed dates</span><strong>September 13–16, 2026</strong></div>
+            <div class="exchange-item"><span>Social deliverables</span><strong>1 Reel + 5 Stories</strong></div>
+            <div class="exchange-item"><span>Marketing assets</span><strong>5–10 edited photos</strong></div>
+            <div class="exchange-item"><span>Room preference</span><strong>High floor / view</strong></div>
+            <p class="proposal-note">Final shot list, posting schedule, tags, and organic usage can be confirmed with the hotel’s marketing team.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer><span>© 2026 Legefilms</span><a href="mailto:geri@legefilms.com">geri@legefilms.com</a><a href="https://legefilms.com" target="_blank" rel="noopener noreferrer">legefilms.com</a></footer>
+
+  <div class="lightbox" id="lightbox" aria-hidden="true"><button class="lightbox-close" aria-label="Close image">×</button><img src="" alt="Expanded hotel portfolio photograph" /></div>
+
+  <script>
+    const SITE_CONFIG = {
+      reels: [
+        { url: "https://www.instagram.com/p/DbAyZpyIhoy/", thumbnail: "assets/reel01.jpg", label: "Cinematic Hospitality" },
+        { url: "https://www.instagram.com/p/DZ7t5xcI1rG/", thumbnail: "assets/reel02.jpg", label: "Luxury Travel Story" }
+      ],
+      photos: ["assets/photo.jpg", ...Array.from({ length: 19 }, (_, index) => `assets/photo${index + 1}.jpg`)]
+    };
+
+    const reelsGrid = document.querySelector("#reels-grid");
+    SITE_CONFIG.reels.forEach((reel, index) => {
+      const link = document.createElement("a");
+      link.className = "reel-card reveal";
+      link.href = reel.url;
+      if (reel.url !== "#") { link.target = "_blank"; link.rel = "noopener noreferrer"; }
+      link.innerHTML = `<div class="reel-preview"><img src="${reel.thumbnail}" alt="Instagram Reel reference ${index + 1}" /></div><div class="reel-meta"><strong>${reel.label}</strong><span>Reference ${index + 1}</span></div>`;
+      link.addEventListener("click", event => { if (reel.url === "#") event.preventDefault(); });
+      reelsGrid.appendChild(link);
+    });
+
+    const gallery = document.querySelector("#photo-gallery");
+    SITE_CONFIG.photos.forEach((src, index) => {
+      const figure = document.createElement("figure");
+      figure.className = "photo reveal";
+      figure.innerHTML = `<img src="${src}" loading="lazy" alt="Hospitality portfolio photograph ${index + 1}" />`;
+      gallery.appendChild(figure);
+    });
+
+    const loader = document.querySelector(".loader");
+    window.addEventListener("load", () => setTimeout(() => loader.classList.add("is-hidden"), 300));
+
+    const nav = document.querySelector(".nav");
+    window.addEventListener("scroll", () => nav.classList.toggle("is-scrolled", window.scrollY > 30), { passive: true });
+
+    window.addEventListener("pointermove", event => {
+      document.body.style.setProperty("--mouse-x", `${event.clientX}px`);
+      document.body.style.setProperty("--mouse-y", `${event.clientY}px`);
+    }, { passive: true });
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll(".reveal").forEach(element => observer.observe(element));
+
+    const lightbox = document.querySelector("#lightbox");
+    const lightboxImage = lightbox.querySelector("img");
+    const closeLightbox = () => { lightbox.classList.remove("is-open"); lightbox.setAttribute("aria-hidden", "true"); document.body.style.overflow = ""; };
+    gallery.addEventListener("click", event => {
+      const image = event.target.closest("img");
+      if (!image) return;
+      lightboxImage.src = image.src;
+      lightbox.classList.add("is-open");
+      lightbox.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    });
+    lightbox.querySelector(".lightbox-close").addEventListener("click", closeLightbox);
+    lightbox.addEventListener("click", event => { if (event.target === lightbox) closeLightbox(); });
+    window.addEventListener("keydown", event => { if (event.key === "Escape") closeLightbox(); });
+  </script>
+</body>
+</html>
